@@ -1,0 +1,101 @@
+networks:
+  default:
+    name: proxy
+    external: true
+
+volumes:
+  transcode_cache:
+
+services:
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    restart: always
+    env_file:
+      - /home/docker/env/media/jackett.env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/docker/config/media/jackett:/config
+  
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    restart: always
+    env_file:
+      - /home/docker/env/media/sonarr.env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/docker/config/media/sonarr:/config
+      - /home/docker/data/media:/media
+      - /home/docker/data/media/downloads:/downloads
+  
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    restart: always
+    env_file:
+      - /home/docker/env/media/radarr.env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/docker/config/media/radarr:/config
+      - /home/docker/data/media:/media
+      - /home/docker/data/media/downloads:/downloads
+
+  tdarr:
+    image: ghcr.io/haveagitgat/tdarr:latest
+    container_name: transcode
+    restart: always
+    env_file:
+      - /home/docker/env/media/tdarr.env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/docker/data/media:/media
+      - /home/docker/config/media/tdarr:/app/configs
+      - transcode_cache:/temp
+
+  unpackerr:
+    image: golift/unpackerr
+    container_name: unpackerr
+    restart: always
+    user: 1001:1001
+    env_file:
+      - /home/docker/env/media/unpackerr.env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/docker/data/media/downloads:/downloads
+      - /home/docker/config/media/unpackerr:/config
+
+  
+  jellyseerr:
+    image: fallenbagel/jellyseerr
+    container_name: jellyseerr
+    restart: always
+    env_file:
+      - /home/docker/env/media/jellyseer.env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/docker/config/media/jellyseerr:/app/config
+  
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    restart: always
+    env_file:
+      - /home/docker/env/media/bazarr.env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/docker/config/media/bazarr:/config
+      - /home/docker/data/media:/media
+
+  
+  media:
+    image: linuxserver/jellyfin
+    container_name: media
+    restart: always
+    env_file:
+      - /home/docker/env/media/jellyfin.env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/docker/data/media/libraries:/media
+      - /home/docker/config/media/jellyfin:/config
+

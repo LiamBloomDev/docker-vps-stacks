@@ -1,0 +1,54 @@
+networks:
+  default:
+    name: proxy
+    external: true
+  grafana-backend:
+    name: grafana-backend
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.13.111.0/29
+
+services:
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - /home/docker/env/monitoring/grafana.env
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - default
+      - grafana-backend
+    links:
+      - db:monitor-db
+      - redis:monitor-redis
+
+  db:
+    image: mariadb
+    container_name: monitor-db
+    restart: always
+    env_file:
+      - /home/docker/env/monitoring/mariadb.env
+    volumes:
+      - grafana_db:/var/lib/mysql
+    networks:
+      - grafana-backend
+
+  redis:
+    image: redis
+    container_name: monitor-redis
+    restart: always
+    volumes:
+      - grafana_cache:/data
+    networks:
+      - grafana-backend
+
+volumes:
+  grafana_data:
+  grafana_db:
+  grafana_cache:

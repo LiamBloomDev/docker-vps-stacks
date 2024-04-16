@@ -1,0 +1,15 @@
+networks:
+  default:
+    name: proxy
+    external: true
+
+services:
+  vscode:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: vscode
+    restart: always
+    env_file:
+      - /home/docker/env/code/vscode.env
+    volumes:
+      - /home/docker/data/code/vscode:/data
+      - /home/docker/config/code/vscode:/config

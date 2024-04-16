@@ -1,0 +1,11 @@
+services:
+  diun:
+    image: crazymax/diun:latest
+    command: serve
+    restart: always
+    env_file:
+      - /home/docker/env/updates/diun.env
+    volumes:
+      - /home/docker/config/updates/diun/diun.yml:/diun.yml:ro
+      - /home/docker/data/updates/diun:/data
+      - /var/run/docker.sock:/var/run/docker.sock

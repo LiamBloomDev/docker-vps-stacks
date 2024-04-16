@@ -1,0 +1,20 @@
+networks:
+  default:
+    name: "proxy"
+    external: true
+
+
+services:
+  torrent:
+    image: binhex/arch-qbittorrentvpn:latest
+    container_name: torrent
+    restart: always
+    privileged: true
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    env_file:
+      - /home/docker/env/torrent/torrent.env
+    volumes:
+      - /home/docker/config/torrent:/config
+      - /home/docker/data/media/downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
