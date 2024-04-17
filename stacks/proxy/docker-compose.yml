@@ -25,7 +25,7 @@ services:
       - "81:81"
     volumes:
       - /home/docker/config/proxy/npm:/data
-      - /home/docker/data/letsencrypt:/etc/letsencrypt
+      - /home/docker/data/proxy/letsencrypt:/etc/letsencrypt
       - /etc/localtime:/etc/localtime:ro
     networks:
       default:
