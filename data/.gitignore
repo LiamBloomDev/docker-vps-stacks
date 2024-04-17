@@ -1,8 +1,8 @@
 *
 !.gitignore
-!code
+!code/
 !media/
 !nextcloud/
-!proxy
-!torrent
-!updates
+!proxy/
+!torrent/
+!updates/
